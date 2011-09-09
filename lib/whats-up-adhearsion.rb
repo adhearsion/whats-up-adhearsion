@@ -12,7 +12,7 @@ WHATS_UP_ADHEARSION_HANDLER = lambda do |env|
   path = path[1..-1]
   rpc_object = Adhearsion::Components.component_manager.extend_object_with(Object.new, :rpc)
   response_object = rpc_object.send(path, *json)
-  [200, {"Content-Type" => response_object[:type]}, response_object[:response]]
+  [200, {"Content-Type" => response_object[:type]}, Array(response_object[:response])]
 end
 
 initialization do
@@ -30,7 +30,7 @@ methods_for :rpc do
   end
 
   def call_load()
-    {:type => 'application/json', :response => JSON.generate({:number_of_calls => Adhearsion.active_calls})}
+    {:type => 'application/json', :response => JSON.generate({:number_of_calls => Adhearsion.active_calls.size})}
   end
 end
 

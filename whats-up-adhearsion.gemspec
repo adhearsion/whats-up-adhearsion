@@ -1,6 +1,5 @@
 GEM_FILES = %w{
   lib/whats-up-adhearsion.rb
-  config/whats-up-adhearsion.yml
 }
 
 Gem::Specification.new do |s|
@@ -17,7 +16,7 @@ Gem::Specification.new do |s|
   s.files = GEM_FILES
 
   s.has_rdoc = false
-  s.homepage = "https://github.com/adhearsion/whats-up-adhearsion"
+  s.homepage = "https://github.com/lgleasain/whats-up-adhearsion"
   s.require_paths = ["lib"]
   s.rubygems_version = "1.2.0"
   s.summary = "Provides a RESTful status for Adhearsion"
@@ -30,4 +29,5 @@ Gem::Specification.new do |s|
   s.add_dependency "mongrel" , '>= 1.2.0.pre2'
   s.add_development_dependency "rspec"
   s.add_development_dependency "flexmock"
+  s.add_development_dependency "jeweler"
 end
