@@ -1,0 +1,14 @@
+# Use path_nesting to specify an arbitrarily nested. Could be used for additional security or in HTTP reverse proxy server.
+path_nesting: /
+
+port: 5005
+
+# The "handler" option here can be any valid Rack::Handler constant name.
+# Other options: WEBrick, EventedMongrel.
+# If you don't know the differences between these, "Mongrel" is definitely a good choice.
+handler: WEBrick
+
+# In a production system, you should make this "false" since
+show_exceptions: true
+
+
