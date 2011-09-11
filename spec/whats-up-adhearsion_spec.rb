@@ -101,19 +101,19 @@ end
 describe 'Status calls' do
   it 'should give a 200 status for a call to pulse' do
     flexmock(Adhearsion::Components).should_receive(:component_manager).and_return { WHATS_UP_ADHEARSION.component_manager }
-    env = {"PATH_INFO" => "/pulse", "rack.input" => StringIO.new('')}
+    env = {"PATH_INFO" => "/health", "rack.input" => StringIO.new('')}
     response = WHATS_UP_ADHEARSION::WHATS_UP_ADHEARSION_HANDLER.call(env)
     response.should be_kind_of(Array)
     response.should have(3).items
     response.first.should equal(200)
     response.second['Content-Type'].should == 'application/text'
-    response.last.should == ['']
+    response.last.should == ['good']
   end
 
   it 'should give a 200 status and number of calls for a call to pulse_load' do
     flexmock(Adhearsion).should_receive(:active_calls).and_return ['', '']
     flexmock(Adhearsion::Components).should_receive(:component_manager).and_return { WHATS_UP_ADHEARSION.component_manager }
-    env = {"PATH_INFO" => "/call_load", "rack.input" => StringIO.new('')}
+    env = {"PATH_INFO" => "/status", "rack.input" => StringIO.new('')}
     response = WHATS_UP_ADHEARSION::WHATS_UP_ADHEARSION_HANDLER.call(env)
     response.should be_kind_of(Array)
     response.should have(3).items

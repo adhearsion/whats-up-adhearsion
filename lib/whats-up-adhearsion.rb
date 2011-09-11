@@ -25,11 +25,11 @@ initialization do
 end
 
 methods_for :rpc do
-  def pulse()
-    {:type => 'application/text', :response => ''}
+  def health()
+    {:type => 'application/text', :response => 'good'}
   end
 
-  def call_load()
+  def status()
     {:type => 'application/json', :response => JSON.generate({:number_of_calls => Adhearsion.active_calls.size})}
   end
 end
