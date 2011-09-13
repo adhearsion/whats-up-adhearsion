@@ -16,7 +16,7 @@ GIT
 PATH
   remote: .
   specs:
-    whats-up-adhearsion (0.1.2)
+    whats-up-adhearsion (0.1.4)
       adhearsion
       json
       mongrel (>= 1.2.0.pre2)
