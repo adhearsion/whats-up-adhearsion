@@ -26,7 +26,7 @@ end
 
 methods_for :rpc do
   def health()
-    {:type => 'application/text', :response => 'good'}
+    {:type => 'text/html; charset=UTF-8', :response => 'good'}
   end
 
   def status()

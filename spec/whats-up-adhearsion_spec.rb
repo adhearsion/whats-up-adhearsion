@@ -106,7 +106,7 @@ describe 'Status calls' do
     response.should be_kind_of(Array)
     response.should have(3).items
     response.first.should equal(200)
-    response.second['Content-Type'].should == 'application/text'
+    response.second['Content-Type'].should == 'text/html; charset=UTF-8'
     response.last.should == ['good']
   end
 
