@@ -5,7 +5,7 @@ GEM_FILES = %w{
 
 Gem::Specification.new do |s|
   s.name = "whats-up-adhearsion"
-  s.version = "0.1.4"
+  s.version = "0.1.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Lance Gleason"]
@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.files = GEM_FILES
 
   s.has_rdoc = false
-  s.homepage = "https://github.com/lgleasain/whats-up-adhearsion"
+  s.homepage = "https://github.com/adhearsion/whats-up-adhearsion"
   s.require_paths = ["lib"]
   s.rubygems_version = "1.2.0"
   s.summary = "Provides a RESTful status for Adhearsion"
