@@ -8,11 +8,15 @@ end
 WHATS_UP_ADHEARSION_HANDLER = lambda do |env|
   json = env["rack.input"].read
   json = json.blank? ? nil : JSON.parse(json)
-  path = env["PATH_INFO"]
-  path = path[1..-1]
-  rpc_object = Adhearsion::Components.component_manager.extend_object_with(Object.new, :rpc)
-  response_object = rpc_object.send(path, *json)
-  [200, {"Content-Type" => response_object[:type]}, Array(response_object[:response])]
+  if env["PATH_INFO"] =~ /favicon.ico/
+    []
+  else
+    path = env["PATH_INFO"]
+    path = path[1..-1]
+    rpc_object = Adhearsion::Components.component_manager.extend_object_with(Object.new, :rpc)
+    response_object = rpc_object.send(path, *json)
+    [200, {"Content-Type" => response_object[:type]}, Array(response_object[:response])]
+  end
 end
 
 initialization do

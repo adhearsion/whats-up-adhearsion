@@ -121,6 +121,13 @@ describe 'Status calls' do
     response.second['Content-Type'].should == 'application/json'
     response.last.should == [JSON.generate({:number_of_calls => 2})] 
   end
+
+  it 'should return nothing on a call to favicon.ico' do
+    flexmock(Adhearsion::Components).should_receive(:component_manager).and_return { WHATS_UP_ADHEARSION.component_manager }
+    env = {"PATH_INFO" => "/favicon.ico", "rack.input" => StringIO.new('')}
+    response = WHATS_UP_ADHEARSION::WHATS_UP_ADHEARSION_HANDLER.call(env)
+    response.should have(0).items
+  end
 end
 
 describe 'Private helper methods' do
