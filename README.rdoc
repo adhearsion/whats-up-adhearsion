@@ -4,14 +4,12 @@ A gem to allow you to monitor your Adhearsion instance
 ==Usage
 All that you have to do to use this component is to include the gem and start up your adhearsion instance.
 To see your monitoring go to 
-*  http://<your adhearsion server ip>:5005/status for the number of active calls
-and,  if you have Active Record in your project,  the size of your connection pool and the number of 
-connections that are checked out and in use.
-* http://<your adhearsion server ip>:5005/health returns good if your server is up.
+*  "http://<your adhearsion server ip>:5005/status" for the number of active calls and,  if you have Active Record in your project,  the size of your connection pool and the number of connections that are checked out and in use.
+* "http://<your adhearsion server ip>:5005/health returns good if your server is up."
 
 All responses are JSON formatted
 Currently the port is not configurable...but is on the todo list :).
 
 ==Author
-Lance Gleason  http://www.lancegleason.com/blog
+Lance Gleason[http://www.lancegleason.com/blog]
 
