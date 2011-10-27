@@ -5,18 +5,22 @@ rescue LoadError
   abort "ERROR: whats_up_adhearsion requires the 'rack' and 'json' gems"
 end
 
+begin
+  require 'active_record'
+    class ActiveRecord::ConnectionAdapters::ConnectionPool
+      attr_reader :checked_out
+    end
+rescue LoadError
+end
+
 WHATS_UP_ADHEARSION_HANDLER = lambda do |env|
   json = env["rack.input"].read
   json = json.blank? ? nil : JSON.parse(json)
-  if env["PATH_INFO"] =~ /favicon.ico/
-    []
-  else
-    path = env["PATH_INFO"]
-    path = path[1..-1]
-    rpc_object = Adhearsion::Components.component_manager.extend_object_with(Object.new, :rpc)
-    response_object = rpc_object.send(path, *json)
-    [200, {"Content-Type" => response_object[:type]}, Array(response_object[:response])]
-  end
+  path = env["PATH_INFO"]
+  path = path[1..-1]
+  rpc_object = Adhearsion::Components.component_manager.extend_object_with(Object.new, :rpc)
+  response_object = rpc_object.send(path, *json)
+  [200, {"Content-Type" => response_object[:type]}, Array(response_object[:response])]
 end
 
 initialization do
@@ -34,7 +38,13 @@ methods_for :rpc do
   end
 
   def status()
-    {:type => 'application/json', :response => JSON.generate({:number_of_calls => Adhearsion.active_calls.size})}
+    response_hash = {:number_of_calls => Adhearsion.active_calls.size}
+    begin
+      response_hash[:active_connections] = ActiveRecord::Base.connection_pool.checked_out.size
+      response_hash[:connection_pool_size] = ActiveRecord::Base.connection_pool.connections.size
+    rescue NameError
+    end
+    {:type => 'application/json', :response => JSON.generate(response_hash)}
   end
 end
 

@@ -95,11 +95,10 @@ describe "The initialization block" do
     flexmock(Rack::Handler::Mongrel).should_receive(:run).with(Proc, :Port => 5000)
     WHATS_UP_ADHEARSION.initialize!
   end
-
 end
 
 describe 'Status calls' do
-  it 'should give a 200 status for a call to pulse' do
+  it 'should give a 200 status for a call to health' do
     flexmock(Adhearsion::Components).should_receive(:component_manager).and_return { WHATS_UP_ADHEARSION.component_manager }
     env = {"PATH_INFO" => "/health", "rack.input" => StringIO.new('')}
     response = WHATS_UP_ADHEARSION::WHATS_UP_ADHEARSION_HANDLER.call(env)
@@ -110,7 +109,39 @@ describe 'Status calls' do
     response.last.should == ['good']
   end
 
-  it 'should give a 200 status and number of calls for a call to pulse_load' do
+  it 'should give a 200 status number of active connections,  size of connection pool and number of calls for a call to status' do
+    require 'active_record'
+    module ActiveRecord
+      module ConnectionAdapters
+        class ConnPool < ConnectionPool
+          def initialize
+            @connections = [1, 2, 3, 4, 5]
+            @checked_out = [1,2,3]
+          end
+        end
+      end
+    end
+    module ActiveRecord
+      class Base
+        def self.connection_pool
+          ActiveRecord::ConnectionAdapters::ConnPool.new
+        end
+      end
+    end
+
+    flexmock(Adhearsion).should_receive(:active_calls).and_return ['', '']
+    flexmock(Adhearsion::Components).should_receive(:component_manager).and_return { WHATS_UP_ADHEARSION.component_manager }
+    env = {"PATH_INFO" => "/status", "rack.input" => StringIO.new('')}
+    response = WHATS_UP_ADHEARSION::WHATS_UP_ADHEARSION_HANDLER.call(env)
+    response.should be_kind_of(Array)
+    response.should have(3).items
+    response.first.should equal(200)
+    response.second['Content-Type'].should == 'application/json'
+    response.last.should == [JSON.generate({:number_of_calls => 2, :active_connections => 3, :connection_pool_size => 5})] 
+  end
+
+  it 'should give a 200 status and number of calls for a call to status' do
+    Object.send(:remove_const, 'ActiveRecord')
     flexmock(Adhearsion).should_receive(:active_calls).and_return ['', '']
     flexmock(Adhearsion::Components).should_receive(:component_manager).and_return { WHATS_UP_ADHEARSION.component_manager }
     env = {"PATH_INFO" => "/status", "rack.input" => StringIO.new('')}
@@ -122,12 +153,6 @@ describe 'Status calls' do
     response.last.should == [JSON.generate({:number_of_calls => 2})] 
   end
 
-  it 'should return nothing on a call to favicon.ico' do
-    flexmock(Adhearsion::Components).should_receive(:component_manager).and_return { WHATS_UP_ADHEARSION.component_manager }
-    env = {"PATH_INFO" => "/favicon.ico", "rack.input" => StringIO.new('')}
-    response = WHATS_UP_ADHEARSION::WHATS_UP_ADHEARSION_HANDLER.call(env)
-    response.should have(0).items
-  end
 end
 
 describe 'Private helper methods' do

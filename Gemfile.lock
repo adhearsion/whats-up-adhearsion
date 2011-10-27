@@ -10,6 +10,16 @@ PATH
 GEM
   remote: http://rubygems.org/
   specs:
+    activemodel (3.1.0)
+      activesupport (= 3.1.0)
+      bcrypt-ruby (~> 3.0.0)
+      builder (~> 3.0.0)
+      i18n (~> 0.6)
+    activerecord (3.1.0)
+      activemodel (= 3.1.0)
+      activesupport (= 3.1.0)
+      arel (~> 2.2.1)
+      tzinfo (~> 0.3.29)
     activesupport (3.1.0)
       multi_json (~> 1.0)
     adhearsion (1.2.0)
@@ -21,6 +31,9 @@ GEM
       pry
       rake
       rubigen (>= 1.5.6)
+    arel (2.2.1)
+    bcrypt-ruby (3.0.0)
+    builder (3.0.0)
     coderay (0.9.8)
     daemons (1.0.10)
     diff-lcs (1.1.3)
@@ -62,11 +75,13 @@ GEM
       sexp_processor (~> 3.0)
     sexp_processor (3.0.6)
     slop (1.9.1)
+    tzinfo (0.3.29)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  activerecord
   adhearsion (~> 1.2.0)
   flexmock
   jeweler
