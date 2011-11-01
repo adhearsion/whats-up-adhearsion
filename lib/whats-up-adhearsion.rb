@@ -8,7 +8,7 @@ end
 begin
   require 'active_record'
     class ActiveRecord::ConnectionAdapters::ConnectionPool
-      attr_reader :checked_out
+      attr_reader :checked_out, :size
     end
 rescue LoadError
 end
@@ -40,8 +40,9 @@ methods_for :rpc do
   def status()
     response_hash = {:number_of_calls => Adhearsion.active_calls.size}
     begin
-      response_hash[:active_connections] = ActiveRecord::Base.connection_pool.checked_out.size
-      response_hash[:connection_pool_size] = ActiveRecord::Base.connection_pool.connections.size
+      response_hash[:db_pool_active] = ActiveRecord::Base.connection_pool.checked_out.size
+      response_hash[:db_pool_cached] = ActiveRecord::Base.connection_pool.connections.size
+      response_hash[:db_pool_max] = ActiveRecord::Base.connection_pool.size
     rescue NameError
     end
     {:type => 'application/json', :response => JSON.generate(response_hash)}

@@ -117,6 +117,7 @@ describe 'Status calls' do
           def initialize
             @connections = [1, 2, 3, 4, 5]
             @checked_out = [1,2,3]
+            @size = 8
           end
         end
       end
@@ -137,7 +138,7 @@ describe 'Status calls' do
     response.should have(3).items
     response.first.should equal(200)
     response.second['Content-Type'].should == 'application/json'
-    response.last.should == [JSON.generate({:number_of_calls => 2, :active_connections => 3, :connection_pool_size => 5})] 
+    response.last.should == [JSON.generate({:number_of_calls => 2, :db_pool_active => 3, :db_pool_cached => 5, :db_pool_max => 8})] 
   end
 
   it 'should give a 200 status and number of calls for a call to status' do
