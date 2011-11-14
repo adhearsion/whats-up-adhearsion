@@ -43,6 +43,7 @@ methods_for :rpc do
       response_hash[:db_pool_active] = ActiveRecord::Base.connection_pool.checked_out.size
       response_hash[:db_pool_cached] = ActiveRecord::Base.connection_pool.connections.size
       response_hash[:db_pool_max] = ActiveRecord::Base.connection_pool.size
+      response_hash[:status] = Adhearsion.status
     rescue NameError
     end
     {:type => 'application/json', :response => JSON.generate(response_hash)}

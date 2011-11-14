@@ -131,6 +131,7 @@ describe 'Status calls' do
     end
 
     flexmock(Adhearsion).should_receive(:active_calls).and_return ['', '']
+    flexmock(Adhearsion).should_receive(:status).and_return :started
     flexmock(Adhearsion::Components).should_receive(:component_manager).and_return { WHATS_UP_ADHEARSION.component_manager }
     env = {"PATH_INFO" => "/status", "rack.input" => StringIO.new('')}
     response = WHATS_UP_ADHEARSION::WHATS_UP_ADHEARSION_HANDLER.call(env)
@@ -138,7 +139,7 @@ describe 'Status calls' do
     response.should have(3).items
     response.first.should equal(200)
     response.second['Content-Type'].should == 'application/json'
-    response.last.should == [JSON.generate({:number_of_calls => 2, :db_pool_active => 3, :db_pool_cached => 5, :db_pool_max => 8})] 
+    response.last.should == [JSON.generate({:number_of_calls => 2, :db_pool_active => 3, :db_pool_cached => 5, :db_pool_max => 8, :status => 'started'})] 
   end
 
   it 'should give a 200 status and number of calls for a call to status' do
