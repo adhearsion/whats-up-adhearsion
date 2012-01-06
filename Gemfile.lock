@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    whats-up-adhearsion (0.1.7)
+    whats-up-adhearsion (0.1.9)
       adhearsion
       json
       mongrel (>= 1.2.0.pre2)

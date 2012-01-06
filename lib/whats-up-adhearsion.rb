@@ -19,8 +19,12 @@ WHATS_UP_ADHEARSION_HANDLER = lambda do |env|
   path = env["PATH_INFO"]
   path = path[1..-1]
   rpc_object = Adhearsion::Components.component_manager.extend_object_with(Object.new, :rpc)
-  response_object = rpc_object.send(path, *json)
-  [200, {"Content-Type" => response_object[:type]}, Array(response_object[:response])]
+  if [:health, :status].member? path.to_sym  
+    response_object = rpc_object.send(path, *json)
+    [200, {"Content-Type" => response_object[:type]}, Array(response_object[:response])]
+  else
+    [204, {"Content-Type" => ''}, :type => nil, :response => nil]
+  end
 end
 
 initialization do

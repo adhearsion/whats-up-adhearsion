@@ -97,6 +97,17 @@ describe "The initialization block" do
   end
 end
 
+describe 'invalid paths' do
+  it 'should give a 204 status for anything other status and health' do
+    flexmock(Adhearsion::Components).should_receive(:component_manager).and_return { WHATS_UP_ADHEARSION.component_manager }
+    env = {"PATH_INFO" => "/foo", "rack.input" => StringIO.new('')}
+    response = WHATS_UP_ADHEARSION::WHATS_UP_ADHEARSION_HANDLER.call(env)
+    response.should be_kind_of(Array)
+    response.should have(3).items
+    response.first.should equal(204)
+  end
+end
+
 describe 'Status calls' do
   it 'should give a 200 status for a call to health' do
     flexmock(Adhearsion::Components).should_receive(:component_manager).and_return { WHATS_UP_ADHEARSION.component_manager }
@@ -166,7 +177,7 @@ describe "the RESTFUL_API_HANDLER lambda" do
     flexmock(Adhearsion::Components).should_receive(:component_manager).and_return { component_manager }
     component_manager.load_code <<-RUBY
         methods_for(:rpc) do
-          def testing_123456(one,two)
+          def health(one,two)
             {:type => 'application/json', :response => JSON.generate([two.reverse, one.reverse])}
           end
         end
@@ -174,7 +185,7 @@ describe "the RESTFUL_API_HANDLER lambda" do
 
     input = StringIO.new %w[jay phillips].to_json
     mock_component_config_with :restful_rpc => {"path_nesting" => "/"}
-    env = {"PATH_INFO" => "/testing_123456", "rack.input" => input}
+    env = {"PATH_INFO" => "/health", "rack.input" => input}
 
     response = WHATS_UP_ADHEARSION::WHATS_UP_ADHEARSION_HANDLER.call(env)
     response.should be_kind_of(Array)
@@ -188,13 +199,13 @@ describe "the RESTFUL_API_HANDLER lambda" do
     flexmock(Adhearsion::Components).should_receive(:component_manager).and_return { component_manager }
     component_manager.load_code <<-RUBY
       methods_for(:rpc) do
-        def foobar()
+        def status()
           {:type => 'application/json', :response => JSON.generate(['hello'])}
         end
       end
     RUBY
 
-    env = {"rack.input" => StringIO.new(""), "PATH_INFO" => "/foobar"}
+    env = {"rack.input" => StringIO.new(""), "PATH_INFO" => "/status"}
 
     response = WHATS_UP_ADHEARSION::WHATS_UP_ADHEARSION_HANDLER.call(env)
     response.first.should equal(200)
@@ -207,7 +218,7 @@ describe "the RESTFUL_API_HANDLER lambda" do
 
     component_manager.load_code '
       methods_for(:rpc) do
-        def rofl(one,two)
+        def status(one,two)
           {:type => "application/json", :response => JSON.generate(["Hai! #{one} #{two}"])}
         end
       end'
@@ -221,7 +232,7 @@ describe "the RESTFUL_API_HANDLER lambda" do
       "HTTP_AUTHORIZATION"   => "Basic amlja3N0YTpyb2ZsY29wdGVyeg==",
       "HTTP_HOST"            => "localhost:5000",
       "HTTP_VERSION"         => "HTTP/1.1",
-      "PATH_INFO"            => "/rofl",
+      "PATH_INFO"            => "/status",
       "QUERY_STRING"         => "",
       "rack.errors"          => StringIO.new(""),
       "rack.input"           => StringIO.new('["o","hai!"]'),
